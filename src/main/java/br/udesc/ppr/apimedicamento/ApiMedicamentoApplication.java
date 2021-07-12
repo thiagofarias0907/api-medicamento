@@ -14,8 +14,10 @@ public class ApiMedicamentoApplication {
 		SpringApplication.run(ApiMedicamentoApplication.class, args);
 	}
 
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
-	}
+//	@GetMapping("")
+//	public String helloWorld(){
+//		return ("{\"project\":\"api-medicamentos\", \"status\":\"running\"}");
+//	}
+
+
 }
