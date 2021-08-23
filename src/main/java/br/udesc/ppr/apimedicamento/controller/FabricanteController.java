@@ -1,11 +1,11 @@
 package br.udesc.ppr.apimedicamento.controller;
 
 import br.udesc.ppr.apimedicamento.entities.Fabricante;
+import br.udesc.ppr.apimedicamento.entities.Medicamento;
 import br.udesc.ppr.apimedicamento.repositories.FabricanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,4 +19,8 @@ public class FabricanteController implements  Controller  {
     @GetMapping("")
     @Override
     public List<Fabricante> getAll(){return  fabricanteRepository.findAll();}
+
+    @PostMapping("/all")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<Fabricante> insertAll(@RequestBody List<Fabricante> fabricanteList) {return  fabricanteRepository.saveAll(fabricanteList);}
 }

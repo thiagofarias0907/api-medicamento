@@ -1,5 +1,8 @@
 package br.udesc.ppr.apimedicamento.entities;
 
+import com.opencsv.bean.CsvBindByName;
+import org.hibernate.annotations.ColumnTransformer;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,9 +14,27 @@ public class Medicamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idmedicamento;
     private String codigo;
-    private String principioativo;
+//    @CsvBindByName(column = "PRINCIPIO_ATIVO")
+    @Column( length = 1000 )
+    private String principioAtivo;
 
+    public Medicamento(String codigo, String principioAtivo) {
+        this.codigo = codigo;
+        this.principioAtivo = principioAtivo;
+    }
 
     @OneToOne(mappedBy = "medicamento")
     Produto produto;
+
+    public Long getIdmedicamento() {
+        return idmedicamento;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public String getPrincipioAtivo() {
+        return principioAtivo;
+    }
 }
