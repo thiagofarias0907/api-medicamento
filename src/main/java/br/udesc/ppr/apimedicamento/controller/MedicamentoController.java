@@ -1,6 +1,7 @@
 package br.udesc.ppr.apimedicamento.controller;
 
 import br.udesc.ppr.apimedicamento.entities.Medicamento;
+import br.udesc.ppr.apimedicamento.entities.Produto;
 import br.udesc.ppr.apimedicamento.repositories.MedicamentoRepository;
 import br.udesc.ppr.apimedicamento.utils.EstatisticaDescritiva;
 import net.minidev.json.JSONArray;
@@ -24,6 +25,16 @@ public class MedicamentoController implements  Controller  {
     @Override
     public List<Medicamento> getAll(){
         return  medicamentoRepository.findAll();
+    }
+
+
+    @GetMapping("/principioAtivo/{substancia}")
+    public List<Medicamento> getByPrincipoAtivo(@PathVariable("substancia") String substancia) {return medicamentoRepository.findAllByPrincipioAtivo(substancia);}
+    @GetMapping("/codigo/{codigo}")
+    public List<Medicamento> getByCodigo(@PathVariable("codigo") String codigo){return medicamentoRepository.findAllByCodigo(codigo);}
+    @GetMapping("/{id}")
+    public Medicamento getById(@PathVariable("id") Long id){
+        return medicamentoRepository.getById(id);
     }
 
 

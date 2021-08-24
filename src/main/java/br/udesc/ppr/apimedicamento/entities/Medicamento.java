@@ -1,20 +1,18 @@
 package br.udesc.ppr.apimedicamento.entities;
 
-import com.opencsv.bean.CsvBindByName;
-import org.hibernate.annotations.ColumnTransformer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "medicamento")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Medicamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idmedicamento;
     private String codigo;
-//    @CsvBindByName(column = "PRINCIPIO_ATIVO")
     @Column( length = 1000 )
     private String principioAtivo;
 

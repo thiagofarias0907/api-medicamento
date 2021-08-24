@@ -1,6 +1,7 @@
 package br.udesc.ppr.apimedicamento.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "fabricante")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Fabricante {
 
     @Id
