@@ -6,7 +6,6 @@ public class EstatisticaCategoria {
 
     private static Float getFrequencia(String target, List<String> data){
         float freq = 0f;
-//        data.sort(String::compareTo);
         for (String value : data){
             if (value.equalsIgnoreCase(target))
                 freq++;
@@ -16,8 +15,6 @@ public class EstatisticaCategoria {
 
     private static Float getFrequenciaPalavras(String target, List<String> data){
         float freq = 0f;
-//        data.sort(String::compareTo);
-
         for (String token : tokenizer(data)){
             if (token.equalsIgnoreCase(target))
                 freq++;

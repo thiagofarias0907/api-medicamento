@@ -21,8 +21,6 @@ import java.util.regex.Pattern;
 public class ProcessaDados {
 
 
-    //    @Autowired
-//    MedicamentoRepository medicamentoRepository;
     @Autowired
     MedicamentoController medicamentoController = new MedicamentoController();
     @Autowired
@@ -52,10 +50,8 @@ public class ProcessaDados {
                 continue;
             Medicamento medicamento = new Medicamento(jsonObject.getAsString(MedicamentoColumnMapper.NUMERO_PROCESSO.getNomeChave()),
                     jsonObject.getAsString(MedicamentoColumnMapper.PRINCIPIO_ATIVO.getNomeChave()));
-//            medicamentoRepository.save(medicamento);
             medicamentoList.add(medicamento);
 
-//            medicamentoController.insertOne(medicamento);
         }
         medicamentoController.insertAll(medicamentoList);
     }
@@ -178,26 +174,6 @@ public class ProcessaDados {
         produtoController.insertAll(produtoList);
 
 
-
-//        Produto produto = new Produto (
-//                nome =  jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                categoria = jsonObject.getAsString(MedicamentoColumnMapper.CATEGORIA.getNomeChave()),
-//                preco = jsonObject.getAsString(MedicamentoColumnMapper.getNomeChave()),
-//                registro = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                codigoEAN = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                apresentacao = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                dosagem = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                tarja = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                restricao = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                regimePreco = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                cap = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                confaz87 = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                icms = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                listaConcessao = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                fabricante = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//                classeTerapeutica = jsonObject.getAsString(MedicamentoColumnMapper.NOME.getNomeChave()),
-//
-//                );
     }
 
 }

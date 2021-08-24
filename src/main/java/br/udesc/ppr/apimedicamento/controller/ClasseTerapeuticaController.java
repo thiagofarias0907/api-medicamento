@@ -20,6 +20,7 @@ public class ClasseTerapeuticaController implements  Controller  {
         return null;
     }
 
+    @Override
     @PostMapping("/all")
-    public List<ClasseTerapeutica> insertAll(@RequestBody List<ClasseTerapeutica> classeTerapeuticaList){ return  classeTerapeuticaRepository.saveAll(classeTerapeuticaList);}
+    public List<ClasseTerapeutica> insertAll(@RequestBody List classeTerapeuticaList){ return  classeTerapeuticaRepository.saveAll(classeTerapeuticaList);}
 }

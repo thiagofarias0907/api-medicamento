@@ -15,16 +15,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/atualiza")
-public class AtualizaDadosController implements Controller {
+public class AtualizaDadosController {
 
     @Autowired
     ProcessaDados processaDados;
-
-    @GetMapping("/0")
-    public List<String[]> readTestFile(){
-        return CapturaDados.readTestFile();
-    }
-
 
     @GetMapping("/1")
     public List<JSONObject> readMainFile(){
@@ -36,17 +30,17 @@ public class AtualizaDadosController implements Controller {
         return CapturaDados.readSecondaryFile(true);
     }
 
-    @GetMapping("/3")
+    @GetMapping("/popular")
     public void processFiles(){
         processaDados.saveData();
     }
 
     @GetMapping("")
-    @Override
-    public List getAll() {
+    public List showOptions() {
         List filesNames = new ArrayList<String>();
         filesNames.add("1 - DADOS_ABERTOS_MEDICAMENTOS");
         filesNames.add("2 - TA_PRECO_MEDICAMENTO");
+        filesNames.add("/popular - inclui dados no banco de dados");
         return filesNames;
     }
 }

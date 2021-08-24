@@ -11,7 +11,6 @@ import br.udesc.ppr.apimedicamento.repositories.ProdutoRepository;
 import br.udesc.ppr.apimedicamento.utils.EstatisticaDescritiva;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -130,7 +129,7 @@ public class ProdutoController implements  Controller {
 
     @PostMapping("/all")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<Produto> insertAll(@RequestBody List<Produto> produtoList){
+    public List<Produto> insertAll(@RequestBody List produtoList){
         return produtoRepository.saveAll(produtoList);
     }
 

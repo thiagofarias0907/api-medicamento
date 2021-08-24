@@ -1,21 +1,14 @@
 package br.udesc.ppr.apimedicamento.utils;
 
-import br.udesc.ppr.apimedicamento.entities.Produto;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.FieldMapByName;
 import com.opencsv.exceptions.CsvValidationException;
 import net.minidev.json.JSONObject;
-import org.springframework.web.util.UriBuilder;
 
 import java.io.*;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -49,14 +42,11 @@ public class CapturaDados {
 
         List<String[]> list = new ArrayList<>();
         try {
-            ;
-
             String[] line;
             while ((line = csvReader.readNext()) != null) {
                 System.out.println(line[0]);
                 list.add(line);
             }
-//            list = csvReader.readAll();
             reader.close();
             csvReader.close();
         } catch (IOException | CsvValidationException e) {
@@ -65,6 +55,11 @@ public class CapturaDados {
         return list;
     }
 
+    /**
+     * Método para baixar e ler planilha 1
+     * @param update
+     * @return
+     */
     public static List<JSONObject> readMainFile(boolean update) {
         Reader reader = null;
         if (update)
@@ -77,8 +72,6 @@ public class CapturaDados {
             e.printStackTrace();
         }
 
-
-//        List<Produto> listaProduto = new ArrayList<>();
         List<JSONObject> lista = new ArrayList<>();
         Map<String,Integer> mapper = new HashMap<>();
 
@@ -91,39 +84,23 @@ public class CapturaDados {
             }
         }
         for (int i = 1; i < lines.size(); i++) {
-//            String nome = lines.get(i)[mapper.get(MedicamentoColumnMapper.NOME.getNomeChave())];
-//            String categoria = lines.get(i)[mapper.get(MedicamentoColumnMapper.CATEGORIA.getNomeChave())];
-//            Long registro = Long.parseLong(lines.get(i)[mapper.get(MedicamentoColumnMapper.NUMERO_REGISTRO.getNomeChave())]);
-//            listaProduto.add(new Produto(nome,categoria, registro ));
-
             JSONObject produto = new JSONObject();
             for (MedicamentoColumnMapper mapperValue : MedicamentoColumnMapper.values()){
                 produto.put(mapperValue.getNomeChave(),lines.get(i)[mapper.get(mapperValue.getNomeChave())]);
             }
             lista.add(produto);
         }
-
-//        return listaProduto;
         return lista;
     }
 
 
+    /**
+     * Método para baixar e ler planilha 2 - usada para popular o banco
+     * @param update
+     * @return
+     */
     public static List<JSONObject> readSecondaryFile(Boolean update) {
         Reader reader = null;
-//        try {
-////            URI url = ClassLoader.getSystemResource("src/main/resources/static/DADOS_ABERTOS_MEDICAMENTOS.csv").toURI();
-////            Path path = Paths.get("C:/Users/Thiago/Desktop/UDESC/55PPR/api-medicamento/src/main/resources/static/TA_PRECO_MEDICAMENTO.csv");
-////            reader = Files.newBufferedReader(path);
-////            reader = Files.newBufferedReader(Paths.get(
-////                    ClassLoader.getSystemResource("src/main/resources/static/DADOS_ABERTOS_MEDICAMENTOS.csv").toURI()));
-////            reader = Files.newBufferedReader(Paths.get("src/main/resources/static/DADOS_ABERTOS_MEDICAMENTOS.csv"));
-////        } catch (URISyntaxException e) {
-////            e.printStackTrace();
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         if (update)
             downloadData(2);
@@ -136,7 +113,6 @@ public class CapturaDados {
         }
 
         List<JSONObject> lista = new ArrayList<>();
-//        List<Produto> listaProduto = new ArrayList<>();
         Map<String,Integer> mapper = new HashMap<>();
 
         List<String[]> lines = readAll(reader,',');
@@ -149,13 +125,6 @@ public class CapturaDados {
             }
         }
         for (int i = 1; i < lines.size(); i++) {
-//            String nome = lines.get(i)[mapper.get(PrecoMedicamentoColumnMapper.PRODUTO.getNomeChave())];
-//            String categoria = lines.get(i)[mapper.get(PrecoMedicamentoColumnMapper.TIPO_DE_PRODUTO.getNomeChave())];
-//            String numeroRegistro = lines.get(i)[mapper.get(PrecoMedicamentoColumnMapper.REGISTRO.getNomeChave())];
-//            Long registro = 0l;
-//            if (!numeroRegistro.matches("\\D+") && !numeroRegistro.isBlank())
-//                registro = Long.parseLong(numeroRegistro);
-//            listaProduto.add(new Produto(nome,categoria, registro ));
 
             JSONObject produto = new JSONObject();
             for (PrecoMedicamentoColumnMapper mapperValue : PrecoMedicamentoColumnMapper.values()){
@@ -164,27 +133,13 @@ public class CapturaDados {
             lista.add(produto);
         }
         return lista;
-//        return listaProduto;
-    }
-
-    public static List<String[]> readTestFile() {
-        Reader reader = null;
-        try {
-//            URI url = ClassLoader.getSystemResource("src/main/resources/static/DADOS_ABERTOS_MEDICAMENTOS.csv").toURI();
-            Path path = Paths.get("C:/Users/Thiago/Desktop/UDESC/55PPR/api-medicamento/src/main/resources/static/teste.csv");
-            reader = Files.newBufferedReader(path);
-//            reader = Files.newBufferedReader(Paths.get(
-//                    ClassLoader.getSystemResource("src/main/resources/static/DADOS_ABERTOS_MEDICAMENTOS.csv").toURI()));
-//            reader = Files.newBufferedReader(Paths.get("src/main/resources/static/DADOS_ABERTOS_MEDICAMENTOS.csv"));
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return readAll(reader,',');
     }
 
 
+    /**
+     * Método
+     * @param mode
+     */
     private static void downloadData(Integer mode){
         String url = URL_MEDICAMENTOS;
         if (mode == 2)
@@ -194,8 +149,6 @@ public class CapturaDados {
         header.add("UTF-8");
 
         HttpClient httpClient = HttpClient.newBuilder().build();
-//        String url = "https://dados.anvisa.gov.br/dados/TA_PRECO_MEDICAMENTO.csv";
-//        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).GET().header("Accept-Encoding", "windows-1252").build();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         try {
@@ -209,20 +162,6 @@ public class CapturaDados {
             fileOutputStream.close();
             if (response.statusCode()!=200)
                 return;
-
-
-//            System.out.println(response.body());
-
-//            String str = new String(response.body().getBytes( "Cp1252"),StandardCharsets.UTF_8);
-//            String str = response.body();
-//            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data_"+mode+".csv")));
-//            writer.write(str);
-//            writer.close();
-//            FileOutputStream outputStream = new FileOutputStream("data_"+mode+".csv");
-//            PrintStream stream  = new PrintStream(outputStream, true, StandardCharsets.UTF_8);
-//            byte[] strToBytes = str.getBytes();
-//            stream.write(strToBytes);
-//            stream.close();
 
         } catch (IOException e) {
             e.printStackTrace();

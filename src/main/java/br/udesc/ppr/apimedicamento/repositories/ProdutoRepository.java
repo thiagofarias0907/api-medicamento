@@ -12,7 +12,6 @@ public interface ProdutoRepository extends JpaRepository<Produto,Long> {
     List<Produto> findByFabricante_Cnpj(String cnpj);
 
     List<Produto> findByFabricante_Nome(String nome);
-//    List<Produto> findByFabricante(Fabricante fabricante);
     List<Produto> findAllByFabricante(Fabricante fabricante);
 
     List<Produto> findAllByCategoria(String categoria);

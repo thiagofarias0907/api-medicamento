@@ -1,16 +1,12 @@
 package br.udesc.ppr.apimedicamento.controller;
 
 import br.udesc.ppr.apimedicamento.entities.Fabricante;
-import br.udesc.ppr.apimedicamento.entities.Medicamento;
 import br.udesc.ppr.apimedicamento.repositories.FabricanteRepository;
-import br.udesc.ppr.apimedicamento.utils.EstatisticaDescritiva;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/fabricantes")
@@ -26,8 +22,9 @@ public class FabricanteController implements  Controller  {
     @GetMapping("/cnpj/{cnpj}")
     public List<Fabricante> getByCnpj(@PathVariable("cnpj") String cnpj) {return fabricanteRepository.findAllByCnpj(cnpj);}
 
+    @Override
     @PostMapping("/all")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<Fabricante> insertAll(@RequestBody List<Fabricante> fabricanteList) {return  fabricanteRepository.saveAll(fabricanteList);}
+    public List<Fabricante> insertAll(@RequestBody List fabricanteList) {return  fabricanteRepository.saveAll(fabricanteList);}
 
 }

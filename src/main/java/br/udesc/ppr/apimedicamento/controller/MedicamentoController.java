@@ -1,11 +1,9 @@
 package br.udesc.ppr.apimedicamento.controller;
 
 import br.udesc.ppr.apimedicamento.entities.Medicamento;
-import br.udesc.ppr.apimedicamento.entities.Produto;
 import br.udesc.ppr.apimedicamento.repositories.MedicamentoRepository;
 import br.udesc.ppr.apimedicamento.utils.EstatisticaCategoria;
 import br.udesc.ppr.apimedicamento.utils.EstatisticaDescritiva;
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,7 +76,7 @@ public class MedicamentoController implements  Controller  {
 
     @PostMapping("/all")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<Medicamento> insertAll(@RequestBody List<Medicamento> medicamentoList) {return  medicamentoRepository.saveAll(medicamentoList);}
+    public List<Medicamento> insertAll(@RequestBody List medicamentoList) {return  medicamentoRepository.saveAll(medicamentoList);}
 
 
 
