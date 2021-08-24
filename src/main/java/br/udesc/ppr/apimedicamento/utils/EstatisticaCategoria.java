@@ -6,7 +6,7 @@ public class EstatisticaCategoria {
 
     private static Float getFrequencia(String target, List<String> data){
         float freq = 0f;
-        data.sort(String::compareTo);
+//        data.sort(String::compareTo);
         for (String value : data){
             if (value.equalsIgnoreCase(target))
                 freq++;
@@ -47,7 +47,7 @@ public class EstatisticaCategoria {
 
         return statistics;
     }
-    public static Map<String, Float>  getEstatisticasPalavras(List<String>  categoryValues){
+    public static Map<String, Float> getEstatisticasPalavras(List<String>  categoryValues){
         Map<String, Float> statistics = new HashMap<>();
         Set<String> allWordsSet = tokenizer(categoryValues);
         for (String value : allWordsSet ){

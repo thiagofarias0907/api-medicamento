@@ -23,4 +23,6 @@ public interface ProdutoRepository extends JpaRepository<Produto,Long> {
     List<Produto> findAllByMedicamento_PrincipioAtivo(String substancia);
     List<Produto> findAllByMedicamento_Codigo(String codigo);
     List<Produto> findAllByMedicamento(Medicamento medicamento);
+
+    List<Produto> findAllByTarja(String tarja);
 }

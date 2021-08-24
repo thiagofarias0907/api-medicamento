@@ -3,6 +3,7 @@ package br.udesc.ppr.apimedicamento.controller;
 import br.udesc.ppr.apimedicamento.entities.Medicamento;
 import br.udesc.ppr.apimedicamento.entities.Produto;
 import br.udesc.ppr.apimedicamento.repositories.MedicamentoRepository;
+import br.udesc.ppr.apimedicamento.utils.EstatisticaCategoria;
 import br.udesc.ppr.apimedicamento.utils.EstatisticaDescritiva;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,15 +39,37 @@ public class MedicamentoController implements  Controller  {
         return medicamentoRepository.getById(id);
     }
 
+    @GetMapping("/principioAtivo/{substancia}/estatistica")
+    public JSONObject getEstatisticaGeral(@PathVariable("substancia") String substancia){
+        List<Medicamento> medicamentoList = medicamentoRepository.findAllByPrincipioAtivo(substancia);
+//        List<Produto> produtoList;
+//        List<Float> prices =  new ArrayList<>();
+        double[] pricesArray = new double[medicamentoList.size()];
+        int i = 0;
+        for(Medicamento medicamento : medicamentoList){
+            pricesArray[i] = medicamento.getProduto().getPreco();
+            i++;
+        }
+        Map<String,Float> descritiva = EstatisticaDescritiva.getEstatisticas(pricesArray);
+        JSONObject resposta = new JSONObject();
+//        resposta.put("total",medicamentoList.size());
+        resposta.put("descritiva",descritiva);
+        return  resposta;
+    }
+    @GetMapping("/principioAtivo/estatistica")
+    public JSONObject getEstatisticaGeral(){
+        List<Medicamento> medicamentoList = medicamentoRepository.findAll();
+        List<String> principioAtivoList = new ArrayList();
+        for(Medicamento medicamento : medicamentoList){
+            principioAtivoList.add(medicamento.getPrincipioAtivo());
+        }
+        Map<String,Float> estatisticaPrincipioAtivo = EstatisticaCategoria.getEstatisticas(principioAtivoList);
 
-//    @GetMapping("/estatistica")
-//    public JSONArray getEstatisticaGeral(){
-//        List<Medicamento> medicamentoList = medicamentoRepository.findAll();
-//
-//        JSONObject estatisticaPrincipioAtivo = EstatisticaCategoria.getEstatisticas();
-//
-//        return  new JSONArray().appendElement(estatisticaPrincipioAtivo);
-//    }
+        JSONObject resposta = new JSONObject();
+        resposta.put("total",medicamentoList.size());
+        estatisticaPrincipioAtivo.forEach(resposta::put);
+        return resposta;
+    }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)

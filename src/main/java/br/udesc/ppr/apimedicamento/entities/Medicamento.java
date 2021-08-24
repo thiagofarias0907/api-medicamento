@@ -1,5 +1,6 @@
 package br.udesc.ppr.apimedicamento.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -26,7 +27,12 @@ public class Medicamento {
     }
 
     @OneToOne(mappedBy = "medicamento")
-    Produto produto;
+    @JsonIgnore
+    private Produto produto;
+
+    public Produto getProduto() {
+        return produto;
+    }
 
     public Long getIdmedicamento() {
         return idmedicamento;

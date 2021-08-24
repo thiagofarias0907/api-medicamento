@@ -8,12 +8,15 @@ import br.udesc.ppr.apimedicamento.repositories.ClasseTerapeuticaRepository;
 import br.udesc.ppr.apimedicamento.repositories.FabricanteRepository;
 import br.udesc.ppr.apimedicamento.repositories.MedicamentoRepository;
 import br.udesc.ppr.apimedicamento.repositories.ProdutoRepository;
+import br.udesc.ppr.apimedicamento.utils.EstatisticaDescritiva;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/produtos")
@@ -43,7 +46,6 @@ public class ProdutoController implements  Controller {
     public List<Produto> getByNomeFabricante(@PathVariable("nome") String nome){
         return produtoRepository.findByFabricante_Nome(nome);
     }
-
     @GetMapping("/fabricante/{id}")
     public List<Produto> getByIdFabricante(@PathVariable("id") Long id){
         if (!fabricanteRepository.existsById(id))
@@ -53,6 +55,8 @@ public class ProdutoController implements  Controller {
         return produtoRepository.findAllByFabricante(fabricante);
     }
 
+    @GetMapping("/tarja/{tarja}")
+    public List<Produto> getByTarja(@PathVariable("tarja") String tarja){ return produtoRepository.findAllByTarja(tarja);}
     @GetMapping("/categoria/{categoria}")
     public List<Produto> getByCategoria(@PathVariable("categoria") String categoria){ return produtoRepository.findAllByCategoria(categoria);}
     @GetMapping("/classe/codigo/{codigo}")
@@ -72,6 +76,52 @@ public class ProdutoController implements  Controller {
         return produtoRepository.findAllByMedicamento(medicamento);
     }
 
+    @GetMapping("/categoria/{categoria}/estatistica")
+    public JSONObject getEstatisticaByCategoria(@PathVariable("categoria") String categoria) {
+        List<Produto> produtoList = produtoRepository.findAllByCategoria(categoria);
+        JSONObject resposta = new JSONObject();
+        resposta.put("categoria",categoria);
+        resposta.put("descritiva",statisticData(produtoList));
+        return resposta;
+    }
+
+    @GetMapping("/cnpj/{cnpj}/estatistica")
+    public JSONObject getEstatisticaByCnpj(@PathVariable("cnpj") String cnpj) {
+        List<Produto> produtoList = produtoRepository.findByFabricante_Cnpj(cnpj);
+        Fabricante fabricante = fabricanteRepository.findByCnpj(cnpj);
+        JSONObject resposta = new JSONObject();
+        JSONObject empresa = new JSONObject();
+        empresa.put("codigo",fabricante.getCnpj());
+        empresa.put("nome",fabricante.getNome());
+        resposta.put("empresa",empresa);
+        resposta.put("descritiva",statisticData(produtoList));
+        return resposta;
+    }
+
+    @GetMapping("/classeTerapeutica/{codigo}/estatistica")
+    public JSONObject getEstatisticaByClasseCodigo(@PathVariable("codigo") String codigo) {
+        List<Produto> produtoList = produtoRepository.findAllByClasseTerapeutica_Codigo(codigo);
+        ClasseTerapeutica classeTerapeutica = classeTerapeuticaRepository.findByCodigo(codigo);
+        JSONObject resposta = new JSONObject();
+        JSONObject classe = new JSONObject();
+        classe.put("codigo",classeTerapeutica.getCodigo());
+        classe.put("nome",classeTerapeutica.getNome());
+        resposta.put("classeTerapeutica",classe);
+        resposta.put("descritiva",statisticData(produtoList));
+        return resposta;
+    }
+
+
+    @GetMapping("/tarja/{tarja}/estatistica")
+    public JSONObject getEstatisticaByTarja(@PathVariable("tarja") String tarja) {
+        List<Produto> produtoList = produtoRepository.findAllByTarja(tarja);
+        JSONObject resposta = new JSONObject();
+        resposta.put("tarja",tarja);
+        resposta.put("descritiva",statisticData(produtoList));
+        return resposta;
+    }
+
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Produto insertProduto(@RequestBody Produto produto){
@@ -85,5 +135,16 @@ public class ProdutoController implements  Controller {
     }
 
 
+    private Map<String,Float> statisticData(List<Produto> produtoList){
+
+        double[] pricesArray = new double[produtoList.size()];
+        int i = 0;
+        for(Produto produto : produtoList){
+            pricesArray[i] = produto.getPreco();
+            i++;
+        }
+        Map<String,Float> descritiva = EstatisticaDescritiva.getEstatisticas(pricesArray);
+        return  descritiva;
+    }
 
 }
