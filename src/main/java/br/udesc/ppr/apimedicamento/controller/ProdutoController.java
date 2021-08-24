@@ -8,12 +8,14 @@ import br.udesc.ppr.apimedicamento.repositories.ClasseTerapeuticaRepository;
 import br.udesc.ppr.apimedicamento.repositories.FabricanteRepository;
 import br.udesc.ppr.apimedicamento.repositories.MedicamentoRepository;
 import br.udesc.ppr.apimedicamento.repositories.ProdutoRepository;
+import br.udesc.ppr.apimedicamento.utils.EstatisticaCategoria;
 import br.udesc.ppr.apimedicamento.utils.EstatisticaDescritiva;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -131,6 +133,23 @@ public class ProdutoController implements  Controller {
     @ResponseStatus(HttpStatus.CREATED)
     public List<Produto> insertAll(@RequestBody List produtoList){
         return produtoRepository.saveAll(produtoList);
+    }
+
+    @Override
+    @GetMapping("/estatisticas")
+    public JSONObject getEstatisticas() {
+
+        List<Produto> produtoList = produtoRepository.findAll();
+        List<String> produtos = new ArrayList();
+        for(Produto classe : produtoList){
+            produtos.add(classe.getNome());
+        }
+        Map<String,Float> estatisticas = EstatisticaCategoria.getEstatisticas(produtos);
+
+        JSONObject resposta = new JSONObject();
+        resposta.put("total",produtoList.size());
+        estatisticas.forEach(resposta::put);
+        return resposta;
     }
 
 

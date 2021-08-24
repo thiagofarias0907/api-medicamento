@@ -40,8 +40,6 @@ public class MedicamentoController implements  Controller  {
     @GetMapping("/principioAtivo/{substancia}/estatistica")
     public JSONObject getEstatisticaGeral(@PathVariable("substancia") String substancia){
         List<Medicamento> medicamentoList = medicamentoRepository.findAllByPrincipioAtivo(substancia);
-//        List<Produto> produtoList;
-//        List<Float> prices =  new ArrayList<>();
         double[] pricesArray = new double[medicamentoList.size()];
         int i = 0;
         for(Medicamento medicamento : medicamentoList){
@@ -50,12 +48,12 @@ public class MedicamentoController implements  Controller  {
         }
         Map<String,Float> descritiva = EstatisticaDescritiva.getEstatisticas(pricesArray);
         JSONObject resposta = new JSONObject();
-//        resposta.put("total",medicamentoList.size());
         resposta.put("descritiva",descritiva);
         return  resposta;
     }
+    @Override
     @GetMapping("/principioAtivo/estatistica")
-    public JSONObject getEstatisticaGeral(){
+    public JSONObject getEstatisticas(){
         List<Medicamento> medicamentoList = medicamentoRepository.findAll();
         List<String> principioAtivoList = new ArrayList();
         for(Medicamento medicamento : medicamentoList){
