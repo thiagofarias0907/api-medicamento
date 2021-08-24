@@ -1,47 +1,31 @@
 package br.udesc.ppr.apimedicamento.entities;
 
-import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvIgnore;
-import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.web.bind.annotation.Mapping;
 
 import javax.persistence.*;
-import java.nio.channels.FileLock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @Entity
 @Table(name = "produto")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idproduto;
-
-    //    @CsvBindByName(column = "NOME_PRODUTO")
     private String nome;
-    //    @CsvBindByName(column = "CATEGORIA_REGULATORIA")
     private String categoria;
-    //    @CsvIgnore
     private Float preco;
-    //    @CsvBindByName(column = "NUMERO_REGISTRO_PRODUTO")
     private Long registro;
-    //    @CsvBindByName(column = "NOME_PRODUTO")
-//    @CsvIgnore
     private String codigoEAN;
-    //    @CsvBindByName(column = "NOME_PRODUTO")
-//    @CsvIgnore
     private String apresentacao;
-    //    @CsvBindByName(column = "NOME_PRODUTO")
-//    @CsvIgnore
     private String dosagem;
-    //    @CsvBindByName(column = "NOME_PRODUTO")
-//    @CsvIgnore
     private String tarja;
-    //    @CsvBindByName(column = "NOME_PRODUTO")
-//    @CsvIgnore
     private Boolean restricao;
-
     private String regimePreco;
     private Boolean cap;
     private Boolean confaz87;
@@ -49,7 +33,7 @@ public class Produto {
     private Boolean listaConcessao;
 
     @Transient
-    private Map<String, Boolean> detalhestributarios;
+    private Map<String, Boolean> detalhestributarios = new HashMap<>();
 
     public Produto() {
     }
@@ -60,7 +44,8 @@ public class Produto {
         this.registro = registro;
     }
 
-    public Produto(String nome, String categoria, Float preco, Long registro, String codigoEAN, String apresentacao, String dosagem, String tarja, Boolean restricao, String regimePreco, Boolean cap, Boolean confaz87, Boolean icms, Boolean listaConcessao, Fabricante fabricante, Medicamento medicamento, ClasseTerapeutica classeTerapeutica) {        this.nome = nome;
+    public Produto(String nome, String categoria, Float preco, Long registro, String codigoEAN, String apresentacao, String dosagem, String tarja, Boolean restricao, String regimePreco, Boolean cap, Boolean confaz87, Boolean icms, Boolean listaConcessao, Fabricante fabricante, Medicamento medicamento, ClasseTerapeutica classeTerapeutica) {
+        this.nome = nome;
         this.categoria = categoria;
         this.preco = preco;
         this.registro = registro;
@@ -80,14 +65,14 @@ public class Produto {
     }
 
     @JoinColumn(name = "idfabricante", referencedColumnName = "idfabricante")
-    @ManyToOne( cascade=CascadeType.ALL)
+    @ManyToOne( )
     private Fabricante fabricante;
 
     @OneToOne( cascade=CascadeType.ALL)
     @JoinColumn(name = "idmedicamento", referencedColumnName = "idmedicamento")
     private Medicamento medicamento;
 
-    @OneToOne( cascade=CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "idclasseterapeutica", referencedColumnName = "idclasseterapeutica")
     private ClasseTerapeutica classeTerapeutica;
 
@@ -132,10 +117,10 @@ public class Produto {
     }
 
     public Map<String, Boolean> getDetalhestributarios() {
-        detalhestributarios.put("cap", cap);
-        detalhestributarios.put("confaz87", confaz87);
-        detalhestributarios.put("icms", icms);
-        detalhestributarios.put("listaConcessao", listaConcessao);
+        detalhestributarios.put("cap", this.cap);
+        detalhestributarios.put("confaz87", this.confaz87);
+        detalhestributarios.put("icms", this.icms);
+        detalhestributarios.put("listaConcessao", this.listaConcessao);
 
         return detalhestributarios;
     }
@@ -144,6 +129,17 @@ public class Produto {
         return fabricante;
     }
 
+    public ClasseTerapeutica getClasseTerapeutica() {
+        return classeTerapeutica;
+    }
+
+    public Medicamento getMedicamento() {
+        return medicamento;
+    }
+
+    public void setClasseTerapeutica(ClasseTerapeutica classeTerapeutica) {
+        this.classeTerapeutica = classeTerapeutica;
+    }
 
     @Override
     public boolean equals(Object o) {

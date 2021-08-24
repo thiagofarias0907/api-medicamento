@@ -18,6 +18,10 @@ public class Medicamento {
     @Column( length = 1000 )
     private String principioAtivo;
 
+
+    public Medicamento() {
+    }
+
     public Medicamento(String codigo, String principioAtivo) {
         this.codigo = codigo;
         this.principioAtivo = principioAtivo;

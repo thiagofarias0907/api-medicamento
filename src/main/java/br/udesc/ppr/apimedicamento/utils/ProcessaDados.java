@@ -8,16 +8,12 @@ import br.udesc.ppr.apimedicamento.entities.ClasseTerapeutica;
 import br.udesc.ppr.apimedicamento.entities.Fabricante;
 import br.udesc.ppr.apimedicamento.entities.Medicamento;
 import br.udesc.ppr.apimedicamento.entities.Produto;
-import br.udesc.ppr.apimedicamento.repositories.MedicamentoRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,9 +77,11 @@ public class ProcessaDados {
 
 
             // List all Fabricantes
-            Fabricante fabricante = new Fabricante(jsonObject.getAsString(PrecoMedicamentoColumnMapper.CNPJ.getNomeChave()), jsonObject.getAsString(PrecoMedicamentoColumnMapper.LABORATORIO.getNomeChave()));
-            if (!fabricanteList.contains(fabricante))
+            Fabricante fabricante = new Fabricante(jsonObject.getAsString(PrecoMedicamentoColumnMapper.CNPJ.getNomeChave()).replaceAll("\\D+",""), jsonObject.getAsString(PrecoMedicamentoColumnMapper.LABORATORIO.getNomeChave()));
+            if (!fabricanteList.contains(fabricante)) {
                 fabricanteList.add(fabricante);
+            }
+
 
             // List All Classes Terapêuticas and parse the code and name for each one
             String originalClasseTerapeutica = jsonObject.getAsString(PrecoMedicamentoColumnMapper.CLASSE_TERAPEUTICA.getNomeChave());
@@ -103,7 +101,9 @@ public class ProcessaDados {
 
             String apresentacao = jsonObject.getAsString(PrecoMedicamentoColumnMapper.APRESENTACAO.getNomeChave());
             String dosagem = apresentacao;
-            Pattern pattern = Pattern.compile("(\\d+)(\\s+)*(\\w+)(\\s+)(.*)");
+            Pattern pattern = Pattern.compile("(\\d+\\,*\\d*)(\\s*)(\\w+\\/*\\w*)*(\\w+)*(\\s+)(.*)");
+            if (apresentacao.startsWith("(") && apresentacao.contains("+"))
+                pattern = Pattern.compile("(\\(\\d+\\,\\d*\\D+\\d+\\,\\d*\\))(\\s+)(\\w+)");
             Matcher matcher = pattern.matcher(jsonObject.getAsString(PrecoMedicamentoColumnMapper.APRESENTACAO.getNomeChave()));
             if (matcher.find())
                 dosagem = matcher.group(1) + " " + matcher.group(3);
@@ -162,6 +162,19 @@ public class ProcessaDados {
         medicamentoController.insertAll(medicamentoList);
         fabricanteController.insertAll(fabricanteList);
         classeTerapeuticaController.insertAll(classeTerapeuticaList);
+        for (Produto produto: produtoList) {
+            ClasseTerapeutica c = produto.getClasseTerapeutica();
+            for (ClasseTerapeutica classe: classeTerapeuticaList) {
+                if( classe.equals(c))
+                    produto.setClasseTerapeutica(classe);
+            }
+            Fabricante f = produto.getFabricante();
+            for (Fabricante fabricante : fabricanteList){
+                if( fabricante.equals(f))
+                    produto.getFabricante().setIdfabricante(fabricante.getIdfabricante());
+            }
+
+        }
         produtoController.insertAll(produtoList);
 
 

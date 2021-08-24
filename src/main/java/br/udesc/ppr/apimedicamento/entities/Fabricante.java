@@ -1,27 +1,34 @@
 package br.udesc.ppr.apimedicamento.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "fabricate")
+@Table(name = "fabricante")
 public class Fabricante {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idfabricante;
+    @Column(unique = true)
     private String cnpj;
     private String nome;
 
+
+    public Fabricante() {
+    }
+
     public Fabricante(String cnpj, String nome) {
-        this.cnpj = cnpj.replaceAll("\\D+","");
+        this.cnpj = cnpj;
         this.nome = nome;
     }
 
     @OneToMany(mappedBy = "fabricante")
-    List<Produto> produtoList;
+    @JsonIgnore
+    private  List<Produto> produtoList;
 
     public Long getIdfabricante() {
         return idfabricante;
@@ -47,16 +54,25 @@ public class Fabricante {
         this.nome = nome;
     }
 
+    public List<Produto> getProdutoList() {
+        return produtoList;
+    }
+
+    public void setProdutoList(List<Produto> produtoList) {
+        this.produtoList = produtoList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Fabricante)) return false;
         Fabricante that = (Fabricante) o;
-        return Objects.equals(cnpj, that.cnpj);
+        return Objects.equals(cnpj, that.cnpj) &&
+                Objects.equals(nome, that.nome);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cnpj);
+        return Objects.hash(cnpj, nome);
     }
 }

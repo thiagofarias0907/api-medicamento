@@ -1,7 +1,6 @@
 package br.udesc.ppr.apimedicamento.entities;
 
-import com.opencsv.bean.CsvBindByName;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,11 +14,11 @@ public class ClasseTerapeutica {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idclasseterapeutica;
     private String codigo;
-    @CsvBindByName(column = "CLASSE_TERAPEUTICA")
     private String nome;
 
     @OneToMany(mappedBy = "classeTerapeutica")
-    List<Produto> produtoList;
+    @JsonIgnore
+    private List<Produto> produtoList;
 
     ClasseTerapeutica(){
 
@@ -42,5 +41,37 @@ public class ClasseTerapeutica {
     @Override
     public int hashCode() {
         return Objects.hash(codigo, nome);
+    }
+
+    public List<Produto> getProdutoList() {
+        return produtoList;
+    }
+
+    public void setProdutoList(List<Produto> produtoList) {
+        this.produtoList = produtoList;
+    }
+
+    public Long getIdclasseterapeutica() {
+        return idclasseterapeutica;
+    }
+
+    public void setIdclasseterapeutica(Long idclasseterapeutica) {
+        this.idclasseterapeutica = idclasseterapeutica;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }
