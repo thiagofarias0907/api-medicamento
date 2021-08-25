@@ -1,7 +1,6 @@
 package br.udesc.ppr.apimedicamento.controller;
 
 import br.udesc.ppr.apimedicamento.entities.Fabricante;
-import br.udesc.ppr.apimedicamento.entities.Medicamento;
 import br.udesc.ppr.apimedicamento.repositories.FabricanteRepository;
 import br.udesc.ppr.apimedicamento.utils.EstatisticaCategoria;
 import net.minidev.json.JSONObject;

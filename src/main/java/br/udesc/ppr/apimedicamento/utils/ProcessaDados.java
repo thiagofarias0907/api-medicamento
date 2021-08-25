@@ -40,20 +40,24 @@ public class ProcessaDados {
 
     }
 
+    /**
+     * Este arquivo 1 não fez mais sentido ao longo do projeto, pois depois dos estudos vimos que apenas o arquivo 2 seria suficiente;
+     * O arquivo PRECO* (DATA_2.CSV) possuiatodos os dados necessários e engloba o o primeiro, mas mantivemos as classes construídas no projeto.
+     */
     private void mainFile() {
 
 
-        List<Medicamento> medicamentoList = new ArrayList<>();
-        List<JSONObject> mainFileData = CapturaDados.readMainFile(false);
-        for (JSONObject jsonObject : mainFileData) {
-            if (jsonObject.getAsString(MedicamentoColumnMapper.PRINCIPIO_ATIVO.getNomeChave()).isBlank())
-                continue;
-            Medicamento medicamento = new Medicamento(jsonObject.getAsString(MedicamentoColumnMapper.NUMERO_PROCESSO.getNomeChave()),
-                    jsonObject.getAsString(MedicamentoColumnMapper.PRINCIPIO_ATIVO.getNomeChave()));
-            medicamentoList.add(medicamento);
-
-        }
-        medicamentoController.insertAll(medicamentoList);
+//        List<Medicamento> medicamentoList = new ArrayList<>();
+//        List<JSONObject> mainFileData = CapturaDados.readMainFile(false);
+//        for (JSONObject jsonObject : mainFileData) {
+//            if (jsonObject.getAsString(MedicamentoColumnMapper.PRINCIPIO_ATIVO.getNomeChave()).isBlank())
+//                continue;
+//            Medicamento medicamento = new Medicamento(jsonObject.getAsString(MedicamentoColumnMapper.NUMERO_PROCESSO.getNomeChave()),
+//                    jsonObject.getAsString(MedicamentoColumnMapper.PRINCIPIO_ATIVO.getNomeChave()));
+//            medicamentoList.add(medicamento);
+//
+//        }
+//        medicamentoController.insertAll(medicamentoList);
     }
 
     private void secondaryFile() {

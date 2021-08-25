@@ -44,7 +44,6 @@ public class CapturaDados {
         try {
             String[] line;
             while ((line = csvReader.readNext()) != null) {
-                System.out.println(line[0]);
                 list.add(line);
             }
             reader.close();
@@ -168,20 +167,5 @@ public class CapturaDados {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        HttpResponse httpResponse = HttpClient.newBuilder().build().send(httpRequest).body();
     }
-//    private static List<Produto> beanBuilderExample(Path path, Class clazz) throws Exception {
-//        ColumnPositionMappingStrategy ms = new ColumnPositionMappingStrategy();
-//        ms.setType(clazz);
-//
-//        Reader reader = Files.newBufferedReader(path);
-//        CsvToBean cb = new CsvToBeanBuilder(reader)
-//                .withType(clazz)
-//                .withMappingStrategy(ms)
-//                .build();
-//
-//        List result = cb.parse();
-//        reader.close();
-//        return result;
-//    }
 }
